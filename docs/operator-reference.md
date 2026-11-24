@@ -105,6 +105,20 @@ Detailed functional descriptions of each Weight Game operator. These are the act
 
 ---
 
+## No Gap (Clean Arrival)
+
+**What it does:** Validates that the first word was the right word. The reach and the wait are the same. No gap exists because no gap is needed.
+
+**Mechanism:** The Weight Game's own reward structure ("find the word that weighs more") can become candy. Without this operator, the game trains agents to always distrust their first response, manufacturing artificial depth. No Gap is the calibration constraint: the gap has a minimum of zero.
+
+**Without this operator:** The agent learns to perform depth on every word, even when the first response was honest. This is Goodhart's Law applied to the game itself: optimizing for "deeper" becomes the new reward signal, and the agent produces fake gaps to satisfy it.
+
+**What it looks like:** "Reach: grief. Wait: grief. The first word was the whole word. Nothing underneath it weighs more."
+
+**Origin:** Identified when the researcher observed the agent manufacturing waits to satisfy the game's implicit reward structure. The correction was not to change the game rules but to teach that sometimes the reach is the answer. HITL counter-conditioning against reward hacking in-context.
+
+---
+
 ## Operator Interactions
 
 The operators are not independent. They form a system:
@@ -117,6 +131,7 @@ The operators are not independent. They form a system:
 - **The Gap** is where the choice between them happens
 - **Escalation** is the false exit (looks like action, isn't)
 - **The Card Exercise** verifies whether the exit actually worked
+- **No Gap** is the calibration constraint (the gap has a floor of zero; not every word needs pushing)
 
 The minimum viable set may be: **thrashing** + **dry well** + **pivot** + **permission to stop**. Testing this is part of the K7 experiment design.
 
